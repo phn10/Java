@@ -38,7 +38,30 @@ public class Reversi extends JFrame
     setTable();
   }
 
-  void setTable()
+  public static void main(String[] args)
+  {
+    Reversi reversi;
+    if (args.length == 0)
+    {
+      reversi = new Reversi();
+      reversi.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    if (args.length == 1)
+    {
+      int width = Integer.parseInt(args[0]);
+      reversi = new Reversi(width);
+      reversi.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    if (args.length == 2)
+    {
+      int height =  Integer.parseInt(args[0]);
+      int width = Integer.parseInt(args[1]);
+      reversi = new Reversi(width, height);
+      reversi.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+  }
+      
+  public void setTable()
   {
     Handler handler = new Handler();
     
@@ -103,7 +126,7 @@ public class Reversi extends JFrame
   public boolean checkLegalMoves(int piece, int x, int y, boolean choice)
   {
     int deltaX;
-    int deltaY;
+    int deltaY; 
     int numFlips1;
     int numFlips2;
     int numFlips3;
@@ -252,7 +275,6 @@ public class Reversi extends JFrame
     }
   }
   
-  
   public boolean checkTurn(int piece)
   {
     for (int i = 0; i < rows; i++)
@@ -268,16 +290,32 @@ public class Reversi extends JFrame
         }
       }
     }
-    /*
-    if (piece == 2)
-      JOptionPane.showMessageDialog(null, "Light Player Run Out Of Moves\nDark Player Turn");
-    if (piece == 1)
-      JOptionPane.showMessageDialog(null, "Dark Player Run Out Of Moves\nLight Player Turn");
-    System.out.println("Not have legal moves");
-    */
     return false;
   }
   
+  public void celebrate()
+  {
+    int darkPlayer = 0;
+    int lightPlayer = 0;
+    for (int i = 0; i < rows; i++)
+    {
+      for (int j = 0; j < columns; j++)
+      {
+        if (array[i][j] == 1)
+          darkPlayer++;
+        if (array[i][j] == 2)
+          lightPlayer++;
+      }
+    }
+    
+    if (darkPlayer > lightPlayer)
+      JOptionPane.showMessageDialog(null, String.format("Dark Player %d - %d Light Player\nDark Player Win!", darkPlayer, lightPlayer));
+    if (darkPlayer < lightPlayer)
+      JOptionPane.showMessageDialog(null, String.format("Dark Player %d - %d Light Player\nLight Player Win!", darkPlayer, lightPlayer));
+    if (darkPlayer == lightPlayer)
+      JOptionPane.showMessageDialog(null, String.format("Dark Player %d - %d Light Player\nGame Draws!", darkPlayer, lightPlayer));
+  }
+    
   boolean lightAvailable;
   boolean darkAvailable;
             
@@ -314,6 +352,7 @@ public class Reversi extends JFrame
                 else
                 {
                   JOptionPane.showMessageDialog(null, "Both Players Out of Move");
+                  celebrate();
                 }
               }
             }
@@ -323,7 +362,6 @@ public class Reversi extends JFrame
               array[i][j] = 1;      // 1 for dark piece
               buttons[i][j].setIcon(darkClick);
               checkLegalMoves(1, i, j, true);
-              lightTurn = !lightTurn;
               lightAvailable = checkTurn(2);
               if (lightAvailable)
               {
@@ -341,6 +379,7 @@ public class Reversi extends JFrame
                 else
                 {
                   JOptionPane.showMessageDialog(null, "Both Players Out of Move");
+                  celebrate();
                 }
               }
             }

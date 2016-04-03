@@ -93,52 +93,81 @@ public class Reversi extends JFrame
   }
    
   
-  public void checkLegalMoves(int piece, int x, int y)
+  public boolean checkLegalMoves(int piece, int x, int y)
   {
     int deltaX;
     int deltaY;
-    int numFlips;
+    int numFlips1;
+    int numFlips2;
+    int numFlips3;
+    int numFlips4;
+    int numFlips5;
+    int numFlips6;
+    int numFlips7;
+    int numFlips8;
+    
     // search up direction
     deltaX = -1;
     deltaY = 0;
-    numFlips = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    numFlips1 = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    if (numFlips1 > 0)
+      flips(piece, x, y, deltaX, deltaY, numFlips1);
     
     
     // search up right direction
     deltaX = -1;
     deltaY = 1;
-    numFlips = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    numFlips2 = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    if (numFlips2 > 0)
+      flips(piece, x, y, deltaX, deltaY, numFlips2);
     
     // search right direction
     deltaX = 0;
     deltaY = 1;
-    numFlips = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    numFlips3 = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    if (numFlips3 > 0)
+      flips(piece, x, y, deltaX, deltaY, numFlips3);
     
     // search up down right direction
     deltaX = 1;
     deltaY = 1;
-    numFlips = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    numFlips4 = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    if (numFlips4 > 0)
+      flips(piece, x, y, deltaX, deltaY, numFlips4);
     
     // search down direction
     deltaX = 1;
     deltaY = 0;
-    numFlips = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    numFlips5 = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    if (numFlips5 > 0)
+      flips(piece, x, y, deltaX, deltaY, numFlips5);
     
     // search down left direction
     deltaX = 1;
     deltaY = -1;
-    numFlips = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    numFlips6 = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    if (numFlips6 > 0)
+      flips(piece, x, y, deltaX, deltaY, numFlips6);
     
     // search left direction
     deltaX = 0;
     deltaY = -1;
-    numFlips = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    numFlips7 = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    if (numFlips7 > 0)
+      flips(piece, x, y, deltaX, deltaY, numFlips7);
     
     // search up left direction
     deltaX = -1;
     deltaY = -1;
-    numFlips = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    numFlips8 = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    if (numFlips8 > 0)
+      flips(piece, x, y, deltaX, deltaY, numFlips8);
     
+    if (numFlips1 != 0 || numFlips2 != 0 || numFlips3 != 0 || numFlips4 != 0 || 
+        numFlips5 != 0 || numFlips6 != 0 || numFlips7 != 0 || numFlips8 != 0)
+      return true;
+    else
+      return false;
   }
   
   public boolean checkEdge(int x, int y)
@@ -188,11 +217,10 @@ public class Reversi extends JFrame
           
           if (!checkEdge(x, y))
           {
-            System.out.println("Inside but out of check edge");
+            numFlips = 0;
           }
           else if (!checkEmpty(x ,y))
           {
-            System.out.println("Inside but out of check empty");
             numFlips = 0;
           }
           else
@@ -200,18 +228,27 @@ public class Reversi extends JFrame
             System.out.println(String.format("Flips: %d", numFlips));
           }
         }
-        //else
-          //System.out.println("Cannot find counter");
       }
-      //else
-        //System.out.println("Out at checkEmpty");
     }
-    //else
-      //System.out.println("Out at checkEdge");
     return numFlips;
   }
-    
   
+  public void flips(int piece, int x, int y, int deltaX, int deltaY, int numFlips)
+  {
+    int tempX;
+    int tempY;
+    for (int i = 1; i <= numFlips; i++)
+    {
+     tempX = x + i * deltaX;
+     tempY = y + i * deltaY;
+     array[tempX][tempY] = piece;
+     if (piece == 2)
+       buttons[tempX][tempY].setIcon(lightClick);
+     else
+       buttons[tempX][tempY].setIcon(darkClick);
+    }
+  }
+    
   public class Handler implements MouseMotionListener, MouseListener
   {
     @Override
@@ -222,19 +259,20 @@ public class Reversi extends JFrame
         {
           if (buttons[i][j] == e.getSource() && array[i][j] == 0)
           {
-            if (lightTurn == true)
+            if (lightTurn == true && checkLegalMoves(2, i, j))
             {
               array[i][j] = 2;     // 2 for light piece
               buttons[i][j].setIcon(lightClick);
               checkLegalMoves(2, i, j);
+              lightTurn = !lightTurn;
             }
-            else
+            if (lightTurn == false && checkLegalMoves(1, i, j))
             {
               array[i][j] = 1;      // 1 for dark piece
               buttons[i][j].setIcon(darkClick);
               checkLegalMoves(1, i, j);
+              lightTurn = !lightTurn; // change to other turn
             }
-            lightTurn = !lightTurn; // change to other turn
           }
         }
       }

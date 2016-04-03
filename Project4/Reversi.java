@@ -95,63 +95,55 @@ public class Reversi extends JFrame
   
   public void checkLegalMoves(int piece, int x, int y)
   {
-    int counter;       // the opposite piece 
-    
-    if (piece == 1)
-      counter = 2;
-    else
-      counter = 1;
-    
     int deltaX;
     int deltaY;
-    int tempX = x;
-    int tempY = y;
     int numFlips;
-    
     // search up direction
     deltaX = -1;
     deltaY = 0;
-    numFlips = 0;
+    numFlips = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
     
-    tempX = tempX + deltaX;
-    tempY = tempY + deltaY;
     
-    if (checkEdge(tempX, tempY))
-    {
-      if (checkEmpty(tempX, tempY))
-      {
-        if (array[tempX][tempY] == counter)
-        {
-          while (array[tempX][tempY] == counter && checkEdge(tempX, tempY) && checkEmpty(tempX, tempY))
-          {
-            tempX = tempX + deltaX;
-            tempY = tempY + deltaY;
-            numFlips++;
-          }
-          
-          if (!checkEdge(tempX, tempY) || !checkEmpty(tempX, tempY))
-          {
-            System.out.println("Inside but out of check edge or empty");
-          }
-          
-          if (array[tempX][tempY] == piece)
-          {
-            System.out.println(String.format("Flips: %d", numFlips));
-          }
-        }
-        else
-          System.out.println("Cannot find counter");
-      }
-      else
-        System.out.println("Out at checkEmpty");
-    }
-    else
-      System.out.println("Out at checkEdge");
+    // search up right direction
+    deltaX = -1;
+    deltaY = 1;
+    numFlips = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    
+    // search right direction
+    deltaX = 0;
+    deltaY = 1;
+    numFlips = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    
+    // search up down right direction
+    deltaX = 1;
+    deltaY = 1;
+    numFlips = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    
+    // search down direction
+    deltaX = 1;
+    deltaY = 0;
+    numFlips = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    
+    // search down left direction
+    deltaX = 1;
+    deltaY = -1;
+    numFlips = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    
+    // search left direction
+    deltaX = 0;
+    deltaY = -1;
+    numFlips = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    
+    // search up left direction
+    deltaX = -1;
+    deltaY = -1;
+    numFlips = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
+    
   }
   
   public boolean checkEdge(int x, int y)
   {
-    return (x >= 0 && x < 8 && y >= 0 && y < 8);
+    return (x >= 0 && x < rows && y >= 0 && y < columns);
   }
     
   public boolean checkEmpty(int x, int y)
@@ -162,6 +154,63 @@ public class Reversi extends JFrame
       return true;
   }
 
+  public int checkNumberOfFlips(int piece, int x, int y, int deltaX, int deltaY)
+  {
+    int counter;
+    int numFlips = 0;
+    x = x + deltaX;
+    y = y + deltaY;
+    
+    if (piece == 1)
+      counter = 2;
+    else
+      counter = 1;
+    
+    if (checkEdge(x, y))
+    {
+      if (checkEmpty(x, y))
+      {
+        if (array[x][y] == counter)
+        {
+          while (checkEdge(x, y) && checkEmpty(x, y))
+          {
+            if (array[x][y] == counter)
+            {
+              x = x + deltaX;
+              y = y + deltaY;
+              numFlips++;
+            }
+            else
+            {
+              break;
+            }
+          }
+          
+          if (!checkEdge(x, y))
+          {
+            System.out.println("Inside but out of check edge");
+          }
+          else if (!checkEmpty(x ,y))
+          {
+            System.out.println("Inside but out of check empty");
+            numFlips = 0;
+          }
+          else
+          {
+            System.out.println(String.format("Flips: %d", numFlips));
+          }
+        }
+        //else
+          //System.out.println("Cannot find counter");
+      }
+      //else
+        //System.out.println("Out at checkEmpty");
+    }
+    //else
+      //System.out.println("Out at checkEdge");
+    return numFlips;
+  }
+    
   
   public class Handler implements MouseMotionListener, MouseListener
   {

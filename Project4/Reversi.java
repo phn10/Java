@@ -8,6 +8,7 @@ public class Reversi extends JFrame
   private int rows, columns;
   private JButton[][] buttons;
   private JPanel panel;
+  private JPanel heading;
   private int[][] array;
   boolean lightTurn = false;
   
@@ -38,19 +39,52 @@ public class Reversi extends JFrame
     setTable();
   }
 
-  void setTable()
+  public static void main(String[] args)
+  {
+    Reversi reversi;
+    if (args.length == 0)
+    {
+      reversi = new Reversi();
+      reversi.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    if (args.length == 1)
+    {
+      int width = Integer.parseInt(args[0]);
+      reversi = new Reversi(width);
+      reversi.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    if (args.length == 2)
+    {
+      int height =  Integer.parseInt(args[0]);
+      int width = Integer.parseInt(args[1]);
+      reversi = new Reversi(width, height);
+      reversi.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+  }
+      
+  public void setTable()
   {
     Handler handler = new Handler();
     
     panel = new JPanel(new GridLayout(rows, columns));
     panel.setPreferredSize(new Dimension(size * columns, size * rows));
+    panel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2, true));
     this.add(panel, "Center");
     
-    grid = new ImageIcon(getClass().getResource("grid"));
-    lightHover = new ImageIcon(getClass().getResource("lightHover"));
-    darkHover = new ImageIcon(getClass().getResource("darkHover"));
-    lightClick = new ImageIcon(getClass().getResource("lightClick"));
-    darkClick = new ImageIcon(getClass().getResource("darkClick"));
+    heading = new JPanel(new GridLayout(0, 2));
+    heading.setPreferredSize(new Dimension(size* columns, 100));
+    heading.setBackground(new Color(16, 154, 31));
+    heading.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2, true));
+    this.add(heading, "North");
+    
+    this.setSize(new Dimension(size * columns + 10, size * rows + 100 + 10));
+    this.setBackground(Color.BLACK);
+    
+    grid = new ImageIcon(getClass().getResource("grid.png"));
+    lightHover = new ImageIcon(getClass().getResource("lightHover.png"));
+    darkHover = new ImageIcon(getClass().getResource("darkHover.png"));
+    lightClick = new ImageIcon(getClass().getResource("lightClick.png"));
+    darkClick = new ImageIcon(getClass().getResource("darkClick.png"));
     
     buttons = new JButton[rows][columns];
     array = new int[rows][columns];
@@ -69,6 +103,13 @@ public class Reversi extends JFrame
     }
     
     init();          // setup 4 pieces in the center of the table
+    
+    try
+    {
+      UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+    }
+    catch (Exception e)
+    { }
     
     this.pack();
     this.setVisible(true);
@@ -93,10 +134,10 @@ public class Reversi extends JFrame
   }
    
   
-  public boolean checkLegalMoves(int piece, int x, int y)
+  public boolean checkLegalMoves(int piece, int x, int y, boolean choice)
   {
     int deltaX;
-    int deltaY;
+    int deltaY; 
     int numFlips1;
     int numFlips2;
     int numFlips3;
@@ -110,7 +151,7 @@ public class Reversi extends JFrame
     deltaX = -1;
     deltaY = 0;
     numFlips1 = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
-    if (numFlips1 > 0)
+    if (numFlips1 > 0 && choice == true)
       flips(piece, x, y, deltaX, deltaY, numFlips1);
     
     
@@ -118,49 +159,49 @@ public class Reversi extends JFrame
     deltaX = -1;
     deltaY = 1;
     numFlips2 = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
-    if (numFlips2 > 0)
+    if (numFlips2 > 0 && choice == true)
       flips(piece, x, y, deltaX, deltaY, numFlips2);
     
     // search right direction
     deltaX = 0;
     deltaY = 1;
     numFlips3 = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
-    if (numFlips3 > 0)
+    if (numFlips3 > 0 && choice == true)
       flips(piece, x, y, deltaX, deltaY, numFlips3);
     
     // search up down right direction
     deltaX = 1;
     deltaY = 1;
     numFlips4 = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
-    if (numFlips4 > 0)
+    if (numFlips4 > 0 && choice == true)
       flips(piece, x, y, deltaX, deltaY, numFlips4);
     
     // search down direction
     deltaX = 1;
     deltaY = 0;
     numFlips5 = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
-    if (numFlips5 > 0)
+    if (numFlips5 > 0 && choice == true)
       flips(piece, x, y, deltaX, deltaY, numFlips5);
     
     // search down left direction
     deltaX = 1;
     deltaY = -1;
     numFlips6 = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
-    if (numFlips6 > 0)
+    if (numFlips6 > 0 && choice == true)
       flips(piece, x, y, deltaX, deltaY, numFlips6);
     
     // search left direction
     deltaX = 0;
     deltaY = -1;
     numFlips7 = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
-    if (numFlips7 > 0)
+    if (numFlips7 > 0 && choice == true)
       flips(piece, x, y, deltaX, deltaY, numFlips7);
     
     // search up left direction
     deltaX = -1;
     deltaY = -1;
     numFlips8 = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
-    if (numFlips8 > 0)
+    if (numFlips8 > 0 && choice == true)
       flips(piece, x, y, deltaX, deltaY, numFlips8);
     
     if (numFlips1 != 0 || numFlips2 != 0 || numFlips3 != 0 || numFlips4 != 0 || 
@@ -223,10 +264,6 @@ public class Reversi extends JFrame
           {
             numFlips = 0;
           }
-          else
-          {
-            System.out.println(String.format("Flips: %d", numFlips));
-          }
         }
       }
     }
@@ -244,11 +281,71 @@ public class Reversi extends JFrame
      array[tempX][tempY] = piece;
      if (piece == 2)
        buttons[tempX][tempY].setIcon(lightClick);
-     else
+     if (piece == 1)
        buttons[tempX][tempY].setIcon(darkClick);
     }
   }
+  
+  public boolean checkTurn(int piece)
+  {
+    for (int i = 0; i < rows; i++)
+    {
+      for (int j = 0; j < columns; j++)
+      {
+        if (array[i][j] == 0)
+        {
+          if (checkLegalMoves(piece, i, j, false))
+          {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+  
+  public void celebrate()
+  {
+    int darkPlayer = 0;
+    int lightPlayer = 0;
+    for (int i = 0; i < rows; i++)
+    {
+      for (int j = 0; j < columns; j++)
+      {
+        if (array[i][j] == 1)
+          darkPlayer++;
+        if (array[i][j] == 2)
+          lightPlayer++;
+      }
+    }
     
+    if (darkPlayer > lightPlayer)
+      JOptionPane.showMessageDialog(null, String.format("Dark Player %d - %d Light Player\nDark Player Win!", darkPlayer, lightPlayer));
+    if (darkPlayer < lightPlayer)
+      JOptionPane.showMessageDialog(null, String.format("Dark Player %d - %d Light Player\nLight Player Win!", darkPlayer, lightPlayer));
+    if (darkPlayer == lightPlayer)
+      JOptionPane.showMessageDialog(null, String.format("Dark Player %d - %d Light Player\nGame Draws!", darkPlayer, lightPlayer));
+  }
+  
+  public int countPiece(int piece)
+  {
+    int count = 0;
+    for (int i = 0; i < rows; i++)
+    {
+      for (int j = 0; j < columns; j++)
+      {
+        if(array[i][j] == piece)
+        {
+          count++;
+        }
+      }
+    }
+    return count;
+  }
+    
+  boolean lightAvailable;
+  boolean darkAvailable;
+            
   public class Handler implements MouseMotionListener, MouseListener
   {
     @Override
@@ -258,34 +355,65 @@ public class Reversi extends JFrame
         for (int j = 0; j < columns; j++)
         {
           if (buttons[i][j] == e.getSource() && array[i][j] == 0)
-          {
-            if (lightTurn == true && checkLegalMoves(2, i, j))
+          {  
+            if (lightTurn == true && checkLegalMoves(2, i, j, false))
             {
               array[i][j] = 2;     // 2 for light piece
               buttons[i][j].setIcon(lightClick);
-              checkLegalMoves(2, i, j);
-              lightTurn = !lightTurn;
+              checkLegalMoves(2, i, j, true);
+              darkAvailable = checkTurn(1);
+              if (darkAvailable)
+              {
+                lightTurn = false;
+                break;
+              }
+              else
+              {
+                lightAvailable = checkTurn(2);
+                if (lightAvailable == true)
+                {
+                  JOptionPane.showMessageDialog(null, "Dark Player Out of Move,\nLight Player Continue");
+                  break;
+                }
+                else
+                {
+                  JOptionPane.showMessageDialog(null, "Both Players Out of Move");
+                  celebrate();
+                }
+              }
             }
-            if (lightTurn == false && checkLegalMoves(1, i, j))
+            
+            if (lightTurn == false && checkLegalMoves(1, i, j, false))
             {
               array[i][j] = 1;      // 1 for dark piece
               buttons[i][j].setIcon(darkClick);
-              checkLegalMoves(1, i, j);
-              lightTurn = !lightTurn; // change to other turn
+              checkLegalMoves(1, i, j, true);
+              lightAvailable = checkTurn(2);
+              if (lightAvailable)
+              {
+                lightTurn = true;
+                break;
+              }
+              else
+              {
+                darkAvailable = checkTurn(1);
+                if (darkAvailable == true)
+                {
+                  JOptionPane.showMessageDialog(null, "Light Player Out of Move,\nDark Player Continue");
+                  break;
+                }
+                else
+                {
+                  JOptionPane.showMessageDialog(null, "Both Players Out of Move");
+                  celebrate();
+                }
+              }
             }
           }
         }
       }
-      
-      for (int i = 0; i < rows; i++)
-      {
-        for (int j = 0; j < columns; j++)
-        {
-          System.out.print(array[i][j]);
-        }
-        System.out.println("");
-      }
     }
+            
     
     @Override
     public void mousePressed(MouseEvent e) {}

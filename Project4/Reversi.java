@@ -9,6 +9,8 @@ public class Reversi extends JFrame
   private JButton[][] buttons;
   private JPanel panel;
   private JPanel heading;
+  private JLabel [] headingLabel;
+  private JButton newGame;
   private int[][] array;
   boolean lightTurn = false;
   
@@ -66,25 +68,45 @@ public class Reversi extends JFrame
   {
     Handler handler = new Handler();
     
-    panel = new JPanel(new GridLayout(rows, columns));
-    panel.setPreferredSize(new Dimension(size * columns, size * rows));
-    panel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2, true));
-    this.add(panel, "Center");
-    
-    heading = new JPanel(new GridLayout(0, 2));
-    heading.setPreferredSize(new Dimension(size* columns, 100));
-    heading.setBackground(new Color(16, 154, 31));
-    heading.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2, true));
-    this.add(heading, "North");
-    
-    this.setSize(new Dimension(size * columns + 10, size * rows + 100 + 10));
-    this.setBackground(Color.BLACK);
-    
     grid = new ImageIcon(getClass().getResource("grid.png"));
     lightHover = new ImageIcon(getClass().getResource("lightHover.png"));
     darkHover = new ImageIcon(getClass().getResource("darkHover.png"));
     lightClick = new ImageIcon(getClass().getResource("lightClick.png"));
     darkClick = new ImageIcon(getClass().getResource("darkClick.png"));
+
+    
+    panel = new JPanel(new GridLayout(rows, columns));
+    panel.setPreferredSize(new Dimension(size * columns, size * rows));
+    panel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2, false));
+    this.add(panel, "Center");
+    
+    heading = new JPanel(new GridLayout(1, 5));
+    heading.setPreferredSize(new Dimension(size* columns, 100));
+    heading.setBackground(new Color(9, 144, 14));
+    heading.setBorder(BorderFactory.createLineBorder(Color.WHITE, 4, false));
+    
+    headingLabel = new JLabel[4];
+    headingLabel[0] = new JLabel(darkClick);
+    headingLabel[1] = new JLabel("2");
+    headingLabel[1].setSize(100, 100);
+    headingLabel[2] = new JLabel("2", SwingConstants.RIGHT);
+    headingLabel[2].setSize(100, 100);
+    headingLabel[3] = new JLabel(lightClick);
+    
+    newGame = new JButton("New Game");
+    newGame.setBackground(new Color(9, 144, 14));
+    newGame.setFont(new Font("Serif", Font.BOLD, 12));
+    newGame.setPreferredSize(new Dimension(200, 100));
+    newGame.addMouseListener(handler);
+    newGame.addMouseMotionListener(handler);
+    
+    heading.add(headingLabel[0]);
+    heading.add(headingLabel[1]);
+    heading.add(newGame);
+    heading.add(headingLabel[2]);
+    heading.add(headingLabel[3]);
+    
+    this.add(heading, "North");
     
     buttons = new JButton[rows][columns];
     array = new int[rows][columns];
@@ -111,6 +133,7 @@ public class Reversi extends JFrame
     catch (Exception e)
     { }
     
+    this.setResizable(false);
     this.pack();
     this.setVisible(true);
   }
@@ -341,8 +364,21 @@ public class Reversi extends JFrame
       }
     }
     return count;
+  } 
+  
+  public void reset()
+  {
+    for (int i = 0; i < rows; i++)
+    {
+      for (int j = 0; j < columns; j++)
+      {
+        array[i][j] = 0;
+        buttons[i][j].setIcon(grid);
+      }
+    }
+    init();
   }
-    
+   
   boolean lightAvailable;
   boolean darkAvailable;
             
@@ -350,6 +386,15 @@ public class Reversi extends JFrame
   {
     @Override
     public void mouseClicked(MouseEvent e) {
+               
+      if (newGame == e.getSource())
+      {
+        reset();
+        // count the score of each players
+        headingLabel[1].setText(String.format("%d", countPiece(1)));
+        headingLabel[2].setText(String.format("%d", countPiece(2)));
+      }
+        
       for (int i = 0; i < rows; i++)
       {
         for (int j = 0; j < columns; j++)
@@ -361,6 +406,11 @@ public class Reversi extends JFrame
               array[i][j] = 2;     // 2 for light piece
               buttons[i][j].setIcon(lightClick);
               checkLegalMoves(2, i, j, true);
+              
+              // count the score of each players
+              headingLabel[1].setText(String.format("%d", countPiece(1)));
+              headingLabel[2].setText(String.format("%d", countPiece(2)));
+            
               darkAvailable = checkTurn(1);
               if (darkAvailable)
               {
@@ -388,6 +438,11 @@ public class Reversi extends JFrame
               array[i][j] = 1;      // 1 for dark piece
               buttons[i][j].setIcon(darkClick);
               checkLegalMoves(1, i, j, true);
+              
+              // count the score of each players
+              headingLabel[1].setText(String.format("%d", countPiece(1)));
+              headingLabel[2].setText(String.format("%d", countPiece(2)));
+            
               lightAvailable = checkTurn(2);
               if (lightAvailable)
               {

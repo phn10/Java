@@ -4,29 +4,29 @@ import java.awt.event.*;
 
 public class Reversi extends JFrame
 {
-  private final int size = 70;
-  private int rows, columns;
-  private JButton[][] buttons;
-  private JPanel panel;
-  private JPanel heading;
-  private JLabel [] headingLabel;
-  private JButton newGame;
-  private int[][] array;
-  private boolean lightTurn = false;
-  private boolean lightAvailable;
-  private boolean darkAvailable;
-  private JPanel optionPanel;
-  private JRadioButton option1;
-  private JRadioButton option2;
-  private ButtonGroup group;
-  private boolean choice;
+  private final int size = 70;       // the size of each square
+  private int rows, columns;         // number of rows and columns in the table
+  private JButton[][] buttons;       // an array of buttons 
+  private JPanel panel;              // panel to store the table
+  private JPanel heading;            // panel to store the heading
+  private JLabel [] headingLabel;    // label to store attibutes on the heading
+  private JButton newGame;           // new game, reset, button
+  private int[][] array;             //
+  private boolean lightTurn = false; // light player turn
+  private boolean lightAvailable;    // check if light player can play the next move 
+  private boolean darkAvailable;     // check if dark player can play the next move
+  private JPanel optionPanel;        // panel which store the game options 
+  private JRadioButton option1;      // option1 players vs players
+  private JRadioButton option2;      // option2 players vs computers
+  private ButtonGroup group;         // group button
+  private boolean choice;            // choice to choose which option
   
-  Icon grid;
-  Icon lightHover;
-  Icon darkHover;
-  Icon lightClick;
-  Icon darkClick;
-  
+  Icon grid;                          // icon display the table grid 
+  Icon lightHover;                    // icon display when hover the light piece on the table
+  Icon darkHover;                     // icon display when hover the dark piece on the table
+  Icon lightClick;                    // icon display when light piece is placed on the table
+  Icon darkClick;                     // icon display when dark piece is placed on the table
+   
   /* constructor
    */
   public Reversi()
@@ -57,6 +57,9 @@ public class Reversi extends JFrame
     setTable();
   }
 
+  /* main function of the program
+   * @param args argument 
+   */
   public static void main(String[] args)
   {
     Reversi reversi;
@@ -101,7 +104,7 @@ public class Reversi extends JFrame
     group.add(option1);
     group.add(option2);
     
-    // option1 player vs player
+    // change choice to true if chossing option1 player vs player
     option1.addItemListener(new ItemListener() {
       @Override
       public void itemStateChanged(ItemEvent e)
@@ -110,7 +113,7 @@ public class Reversi extends JFrame
       }
     });
     
-    // option2 player vs computer
+    // change choice to false if choosing option2 player vs computer
     option2.addItemListener(new ItemListener() {
       @Override 
       public void itemStateChanged(ItemEvent e)
@@ -195,10 +198,10 @@ public class Reversi extends JFrame
    */
   public void init()
   {
-    int x1 = rows / 2 - 1;
-    int x2 = x1 + 1;
-    int y1 = columns / 2 - 1;
-    int y2 = y1 + 1;
+    int x1 = rows / 2 - 1;             // the x coordinate of the first center square
+    int x2 = x1 + 1;                   // the x cooridante of the second center square
+    int y1 = columns / 2 - 1;          // the y cooridnate of the first center square            
+    int y2 = y1 + 1;                   // the y cooridnate of teh second center square
       
     buttons[x1][y1].setIcon(darkClick);
     buttons[x1][y2].setIcon(lightClick);
@@ -236,7 +239,6 @@ public class Reversi extends JFrame
     numFlips1 = checkNumberOfFlips(piece, x, y, deltaX, deltaY);
     if (numFlips1 > 0 && choice == true)
       flips(piece, x, y, deltaX, deltaY, numFlips1);
-    
     
     // search up right direction
     deltaX = -1;
@@ -294,7 +296,11 @@ public class Reversi extends JFrame
       return false;
   }
   
-  
+  /* find the toal of flips piece in 8 directions
+   * @param piece the color of the selected piece, 1: black, 2: white
+   * @param x the x coordinate of the selected square
+   * @param y the y cooridnate of the selected square
+   */
   public int maximumFlips(int piece, int x, int y)
   {
     int deltaX;        // the change in x coordinate
@@ -488,8 +494,8 @@ public class Reversi extends JFrame
       JOptionPane.showMessageDialog(null, String.format("Dark Player %d - %d Light Player\nGame Draws!", darkPlayer, lightPlayer));
   }
   
-  /* count the number of piece on the board
-   * @param piece the color of the selected piece 1: black 2: white
+  /* count the number of black or white pieces on the board
+   * @param piece the color of the pieces want to count 1: black 2: white
    */
   public int countPiece(int piece)
   {
@@ -523,12 +529,15 @@ public class Reversi extends JFrame
     init();
   }
   
+  /* determine the most optimum move for the computer
+   * then execute the move on selected square and flip
+   */
   public void playWithAI()
   {
-    int numFlips = 0;
-    int temp;
-    int aiX = 0;
-    int aiY = 0;
+    int numFlips = 0;    // the number of flips
+    int temp;            // 
+    int aiX = 0;         // x coordinate of the selected square
+    int aiY = 0;         // y coordinate of the selected square
     
     for (int i = 0; i < rows; i++)
     {
@@ -554,6 +563,8 @@ public class Reversi extends JFrame
   
   public class Handler implements MouseMotionListener, MouseListener
   {
+    /* method which will be executed when click each buttons by mouse
+     */
     @Override
     public void mouseClicked(MouseEvent e) {       
       if (newGame == e.getSource())

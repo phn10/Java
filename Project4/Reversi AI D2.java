@@ -2,6 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * This class simulate the game of reversi with gui design and different functions
+ * @author Phong Nguyen
+ */
 public class Reversi extends JFrame
 {
   private final int size = 70;       // the size of each square
@@ -11,7 +15,7 @@ public class Reversi extends JFrame
   private JPanel heading;            // panel to store the heading
   private JLabel [] headingLabel;    // label to store attibutes on the heading
   private JButton newGame;           // new game, reset, button
-  private int[][] array;             //
+  private int[][] array;             // the numerical representations of each pieces: 1: dark, 2: light, 0: empty space
   private boolean lightTurn = false; // light player turn
   private boolean lightAvailable;    // check if light player can play the next move 
   private boolean darkAvailable;     // check if dark player can play the next move
@@ -220,7 +224,7 @@ public class Reversi extends JFrame
   }
    
   /* check the legal of the move, search in 8 directions
-   * @param piece the color of the piece, 1: black, 2: white
+   * @param piece the color of the piece, 1: dark, 2: light
    * @param x the x coordinate of the square
    * @param y the y coordinate of the square
    * @param choice option to flip the the pieces in between or not 
@@ -301,8 +305,8 @@ public class Reversi extends JFrame
       return false;
   }
   
-  /* find the toal of flips piece in 8 directions
-   * @param piece the color of the selected piece, 1: black, 2: white
+  /* find the toal of flips in 8 directions
+   * @param piece the color of the selected piece, 1: dark, 2: light
    * @param x the x coordinate of the selected square
    * @param y the y cooridnate of the selected square
    */
@@ -387,7 +391,7 @@ public class Reversi extends JFrame
   }
 
   /* count number of flips when searching certain directions from the selected piece
-   * @param piece the color of the selected piece, 1: black, 2: white
+   * @param piece the color of the selected piece, 1: dark, 2: light
    * @param x the x coordinate of the selected piece
    * @param y the y cooridnate of the selected piece
    * @param deltaX 
@@ -419,7 +423,7 @@ public class Reversi extends JFrame
   }
   
   /* flip the piece in between two piece which have same color
-   * @param piece the color of the selected piece 1: black, 2: white 
+   * @param piece the color of the selected piece 1: dark, 2: light 
    * @param x the x coordinate of the selected piece
    * @param y the y cooridnate of the selected piece
    * @param deltaX 
@@ -442,8 +446,8 @@ public class Reversi extends JFrame
     }
   }
   
-  /* check the legal of the move the players just made
-   * @param piece the color of the piece  1: black, 2: white
+  /* test if black or white piece run out of move
+   * @param piece the color of the piece  1: dark, 2: light
    */
   public boolean checkTurn(int piece)
   {
@@ -467,8 +471,8 @@ public class Reversi extends JFrame
    */
   public void celebrate()
   {
-    int darkPlayer = countPiece(1);
-    int lightPlayer = countPiece(2);
+    int darkPlayer = countPiece(1);           // count the number of dark pieces on the table
+    int lightPlayer = countPiece(2);          // count the number of white pieces on the table
     
     if (darkPlayer > lightPlayer)
       JOptionPane.showMessageDialog(null, String.format("Dark Player %d - %d Light Player\nDark Player Win!", darkPlayer, lightPlayer));
@@ -478,8 +482,8 @@ public class Reversi extends JFrame
       JOptionPane.showMessageDialog(null, String.format("Dark Player %d - %d Light Player\nGame Draws!", darkPlayer, lightPlayer));
   }
   
-  /* count the number of black or white pieces on the board
-   * @param piece the color of the pieces want to count 1: black 2: white
+  /* count the number of dark or light pieces on the board
+   * @param piece the color of the pieces want to count 1: dark 2: light
    */
   public int countPiece(int piece)
   {
@@ -513,13 +517,13 @@ public class Reversi extends JFrame
     init();
   }
   
-  /* determine the most optimum move for the computer
+  /* find the square which can flip the most pieces
    * then execute the move on selected square and flip
    */
   public void lightAIMoves()
   {
     int numFlips = 0;    // the number of flips
-    int temp;            // 
+    int temp;            // count number of flips in each situation
     int aiX = 0;         // x coordinate of the selected square
     int aiY = 0;         // y coordinate of the selected square
     
@@ -540,11 +544,14 @@ public class Reversi extends JFrame
       }   
     }
     
+    // execute the flip
     checkLegalMoves(2, aiX, aiY, true);
     array[aiX][aiY] = 2;
     buttons[aiX][aiY].setIcon(lightClick);
   } 
   
+  /* execute the dark play
+   */
   public void darkMoves(int x, int y)
   {
     if (checkLegalMoves(1, x, y, true))
@@ -554,6 +561,8 @@ public class Reversi extends JFrame
     }
   }
   
+  /* execute the light play
+   */
   public void lightMoves(int x, int y)
   {
     if (checkLegalMoves(2, x, y, true))
@@ -563,6 +572,9 @@ public class Reversi extends JFrame
     }
   }
   
+  /* check the availability of dark and light player after
+   * dark player executes his move
+   */
   public boolean darkCheckNextTurn()
   {
     boolean lightAvailable;
@@ -587,6 +599,9 @@ public class Reversi extends JFrame
     }
   }
   
+  /* check the availability of light and dark player after
+   * light player executes his move
+   */
   public boolean lightCheckNextTurn()
   {
     boolean lightAvailable;
@@ -611,6 +626,9 @@ public class Reversi extends JFrame
     }
   }
   
+  /*
+   * update the score of each players on the heading
+   */
   public void displayScore()
   {
     headingLabel[1].setText(String.format("%d", countPiece(1)));
@@ -619,23 +637,27 @@ public class Reversi extends JFrame
   
   public class Handler implements MouseMotionListener, MouseListener
   {
-    /* method which will be executed when click each buttons by mouse
+    /*  execute the body when click buttons by mouse
      */
     @Override
     public void mouseClicked(MouseEvent e) {       
+      
+      // click "new game" button
       if (newGame == e.getSource())
       {
         reset();
-        // count the score of each players
         displayScore();
       }
         
+      // click square on the table
+      // go through the columns and rows to find the button which is clicked
       for (int i = 0; i < rows; i++)
       {
         for (int j = 0; j < columns; j++)
         {
           if (buttons[i][j] == e.getSource() && array[i][j] == 0)
           { 
+            // if the game option is player vs player
             if (gameOption)
             {
               if (lightTurn == false && checkLegalMoves(1, i, j, false))
@@ -651,6 +673,8 @@ public class Reversi extends JFrame
                 displayScore();
               }
             }
+            
+            // if the game option is player vs computer
             else
             {
               if (lightTurn == false && checkLegalMoves(1, i, j, false))

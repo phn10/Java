@@ -227,7 +227,8 @@ public class Reversi extends JFrame
    * @param piece the color of the piece, 1: dark, 2: light
    * @param x the x coordinate of the square
    * @param y the y coordinate of the square
-   * @param choice option to flip the the pieces in between or not 
+   * @param choice execute the flips only when choice is true
+   * @return true if this is a legal move, false if it's not
    */
   public boolean checkLegalMoves(int piece, int x, int y, boolean choice)
   {
@@ -309,6 +310,7 @@ public class Reversi extends JFrame
    * @param piece the color of the selected piece, 1: dark, 2: light
    * @param x the x coordinate of the selected square
    * @param y the y cooridnate of the selected square
+   * @return the total number of flips in 8 directions
    */
   public int maximumFlips(int piece, int x, int y)
   {
@@ -367,11 +369,10 @@ public class Reversi extends JFrame
       numFlips5 + numFlips6 + numFlips7 + numFlips8; 
   }
   
-  
-  
-  /* check if the piece is outside or inside the board
+  /* check if the selected square is outside or inside the board
    * @param x the x coordinate of the piece
    * @param y the y coordinate of the piece
+   * @return true if the piece is inside, false if the piece is outside
    */
   public boolean checkEdge(int x, int y)
   {
@@ -381,6 +382,7 @@ public class Reversi extends JFrame
   /* check if the selected square has any pieces inside
    * @param x the x cooridnate of the square
    * @param y the y cooridnate of the square
+   * @return true if the square is empty, false if the square not empty
    */
   public boolean checkEmpty(int x, int y)
   {
@@ -396,6 +398,7 @@ public class Reversi extends JFrame
    * @param y the y cooridnate of the selected piece
    * @param deltaX 
    * @param deltaY
+   * @return the number of flips
    */
   public int checkNumberOfFlips(int piece, int x, int y, int deltaX, int deltaY)
   {
@@ -422,7 +425,7 @@ public class Reversi extends JFrame
     return numFlips;
   }
   
-  /* flip the piece in between two piece which have same color
+  /* flip the piece in between two piece in certain direction
    * @param piece the color of the selected piece 1: dark, 2: light 
    * @param x the x coordinate of the selected piece
    * @param y the y cooridnate of the selected piece
@@ -446,8 +449,9 @@ public class Reversi extends JFrame
     }
   }
   
-  /* test if black or white piece run out of move
+  /* test if dark or light player run out of move
    * @param piece the color of the piece  1: dark, 2: light
+   * @return true if dark or light player still have move
    */
   public boolean checkTurn(int piece)
   {
@@ -484,6 +488,7 @@ public class Reversi extends JFrame
   
   /* count the number of dark or light pieces on the board
    * @param piece the color of the pieces want to count 1: dark 2: light
+   * @return the number of selected pieces on the table
    */
   public int countPiece(int piece)
   {
@@ -574,6 +579,7 @@ public class Reversi extends JFrame
   
   /* check the availability of dark and light player after
    * dark player executes his move
+   * @return true if light player can play next
    */
   public boolean darkCheckNextTurn()
   {
@@ -601,6 +607,7 @@ public class Reversi extends JFrame
   
   /* check the availability of light and dark player after
    * light player executes his move
+   * @return false if dark player can play next
    */
   public boolean lightCheckNextTurn()
   {
@@ -635,9 +642,14 @@ public class Reversi extends JFrame
     headingLabel[2].setText(String.format("%d", countPiece(2)));
   }
   
+  
+  /**
+   * modify the behavior of mouse when click or hover over the buttons
+   * @author Phong Nguyen
+   */
   public class Handler implements MouseMotionListener, MouseListener
   {
-    /*  execute the body when click buttons by mouse
+    /*  execute the body when click any buttons
      */
     @Override
     public void mouseClicked(MouseEvent e) {       
@@ -712,6 +724,9 @@ public class Reversi extends JFrame
     @Override
     public void mouseDragged(MouseEvent e) {}
     
+    /*
+     * execute the body if hover the mouse over buttons on board
+     */
     @Override 
     public void mouseMoved(MouseEvent e) {
       for (int i = 0; i < rows; i++)

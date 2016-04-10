@@ -30,25 +30,6 @@ public class Reversi extends JFrame
   Icon darkHover;                     // icon display when hover the dark piece on the table
   Icon lightClick;                    // icon display when light piece is placed on the table
   Icon darkClick;                     // icon display when dark piece is placed on the table
-   
-  /* constructor
-   */
-  public Reversi()
-  {
-    rows = 8;
-    columns = 8;
-    setTable();
-  }
-
-  /* constructor
-   * @param boardSize the size of the board
-   */
-  public Reversi(int boardSize)
-  {
-    rows = boardSize;
-    columns = boardSize;
-    setTable();
-  }
 
   /* constructor
    * @param height the height of the board
@@ -59,6 +40,21 @@ public class Reversi extends JFrame
     columns = width;
     rows = height;
     setTable();
+  }
+  
+  /* constructor
+   * @param boardSize the size of the board
+   */
+  public Reversi(int boardSize)
+  {
+    this(boardSize, boardSize);
+  }
+  
+  /* constructor
+   */
+  public Reversi()
+  {
+    this(8);
   }
 
   /* main function of the program
@@ -86,6 +82,24 @@ public class Reversi extends JFrame
       reversi.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
   }
+  
+  public int[][] getArray()
+  {
+    return array;
+  }
+  
+  public void setArray(int[][] arr)
+  {
+    int r = arr.length;
+    int c = arr[0].length;
+    for (int i = 0; i < r; i++)
+    {
+      for (int j = 0; j < c; j++)
+      {
+        this.array[i][j] = arr[i][j];
+      }
+    }
+  }       
   
   /* set up the initial setting of the table
    */
@@ -669,37 +683,46 @@ public class Reversi extends JFrame
         {
           if (buttons[i][j] == e.getSource() && array[i][j] == 0)
           { 
+            boolean played = false;
+            
             // if the game option is player vs player
             if (gameOption)
             {
-              if (lightTurn == false && checkLegalMoves(1, i, j, false))
+              //dark player turn
+              if (lightTurn == false && checkLegalMoves(1, i, j, false) && played == false)
               {
                 darkMoves(i, j);
                 lightTurn = darkCheckNextTurn();
                 displayScore();
+                played = true;
               }
-              if (lightTurn == true && checkLegalMoves(2, i, j, false))
+              // white player turn
+              if (lightTurn == true && checkLegalMoves(2, i, j, false) && played == false)
               {
                 lightMoves(i, j);
                 lightTurn = lightCheckNextTurn();
                 displayScore();
+                played = true;
               }
             }
             
             // if the game option is player vs computer
             else
             {
-              if (lightTurn == false && checkLegalMoves(1, i, j, false))
+              // dark player turn
+              if (lightTurn == false && checkLegalMoves(1, i, j, false) && played == false)
               {
                 darkMoves(i, j);
                 lightTurn = darkCheckNextTurn();
                 displayScore();
               }
-              if (lightTurn == true)
+              // white player turn
+              if (lightTurn == true && played == false)
               {
                 lightAIMoves();
                 lightTurn = lightCheckNextTurn();
                 displayScore();
+                played = true;
               }
             }
           }

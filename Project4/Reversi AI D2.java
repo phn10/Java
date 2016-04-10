@@ -108,6 +108,7 @@ public class Reversi extends JFrame
   }       
   
   /* set up the initial setting of the table
+   * @throws Exception if there is problem with the GUI representation
    */
   public void setTable()
   {
@@ -422,7 +423,7 @@ public class Reversi extends JFrame
    */
   public int checkNumberOfFlips(int piece, int x, int y, int deltaX, int deltaY)
   {
-    int counter;       // the name of the opposite piece 
+    int counter;       // the color of the opposite piece 
     int numFlips = 0;  // the number of flipped piece
     x = x + deltaX;
     y = y + deltaY;
@@ -455,8 +456,10 @@ public class Reversi extends JFrame
    */
   public void flips(int piece, int x, int y, int deltaX, int deltaY, int numFlips)
   {
-    int tempX;
-    int tempY;
+    int tempX;         // a temporary value of x coordinate
+    int tempY;         // a temporary value of y cooridnate
+    
+    // flips the expected number of numFlips
     for (int i = 1; i <= numFlips; i++)
     {
      tempX = x + i * deltaX;
@@ -475,6 +478,9 @@ public class Reversi extends JFrame
    */
   public boolean checkTurn(int piece)
   {
+    // go through the array and find the legal moves
+    // if find one legal move, return true
+    // else return false
     for (int i = 0; i < rows; i++)
     {
       for (int j = 0; j < columns; j++)
@@ -512,7 +518,9 @@ public class Reversi extends JFrame
    */
   public int countPiece(int piece)
   {
-    int count = 0;
+    int count = 0;         // the number of pieces which color is specified in the variable parameter
+    
+    // go through the array and find the number of pieces 
     for (int i = 0; i < rows; i++)
     {
       for (int j = 0; j < columns; j++)
@@ -530,6 +538,7 @@ public class Reversi extends JFrame
    */
   public void reset()
   {
+    // set every elements to 0 and set each buttons grid icon
     for (int i = 0; i < rows; i++)
     {
       for (int j = 0; j < columns; j++)
@@ -552,6 +561,7 @@ public class Reversi extends JFrame
     int aiX = 0;         // x coordinate of the selected square
     int aiY = 0;         // y coordinate of the selected square
     
+    // go through the array and find the maximum flips each moves can make
     for (int i = 0; i < rows; i++)
     {
       for (int j = 0; j < columns; j++)
@@ -670,6 +680,7 @@ public class Reversi extends JFrame
   public class Handler implements MouseMotionListener, MouseListener
   {
     /*  execute the body when click any buttons
+     * @param e MouseEvent
      */
     @Override
     public void mouseClicked(MouseEvent e) {       
@@ -755,6 +766,7 @@ public class Reversi extends JFrame
     
     /*
      * execute the body if hover the mouse over buttons on board
+     * @param e MouseEvent
      */
     @Override 
     public void mouseMoved(MouseEvent e) {

@@ -83,11 +83,17 @@ public class Reversi extends JFrame
     }
   }
   
+  /* get the array representaion of the board
+   * @return the array representation of the board
+   */
   public int[][] getArray()
   {
     return array;
   }
   
+  /* set the array representation of the board
+   * @param arr get the arr argument and set the value of the object array
+   */
   public void setArray(int[][] arr)
   {
     int r = arr.length;
@@ -170,7 +176,7 @@ public class Reversi extends JFrame
     headingLabel[3] = new JLabel(lightClick);
     
     
-    /* construc new game button */
+    /* construct new game button */
     newGame = new JButton("New Game");
     newGame.setBackground(new Color(9, 144, 14));
     newGame.setFont(new Font("Serif", Font.BOLD, 12));
@@ -241,7 +247,7 @@ public class Reversi extends JFrame
    * @param piece the color of the piece, 1: dark, 2: light
    * @param x the x coordinate of the square
    * @param y the y coordinate of the square
-   * @param choice execute the flips only when choice is true
+   * @param choice execute the flips only when choice is true, if choice is false, not flip anythings
    * @return true if this is a legal move, false if it's not
    */
   public boolean checkLegalMoves(int piece, int x, int y, boolean choice)
@@ -320,7 +326,7 @@ public class Reversi extends JFrame
       return false;
   }
   
-  /* find the toal of flips in 8 directions
+  /* find the toal of flips in 8 directions (use for AI methods)
    * @param piece the color of the selected piece, 1: dark, 2: light
    * @param x the x coordinate of the selected square
    * @param y the y cooridnate of the selected square
@@ -463,9 +469,9 @@ public class Reversi extends JFrame
     }
   }
   
-  /* test if dark or light player run out of move
+  /* test if dark or light player able to make the next move
    * @param piece the color of the piece  1: dark, 2: light
-   * @return true if dark or light player still have move
+   * @return true if dark or light player still have move, false if he runs out of move
    */
   public boolean checkTurn(int piece)
   {
@@ -706,7 +712,7 @@ public class Reversi extends JFrame
               }
             }
             
-            // if the game option is player vs computer
+            // if the game option is player vs computer 
             else
             {
               // dark player turn

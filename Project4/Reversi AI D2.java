@@ -156,7 +156,7 @@ public class Reversi extends JFrame
     lightClick = new ImageIcon(getClass().getResource("lightClick.png"));
     darkClick = new ImageIcon(getClass().getResource("darkClick.png"));
 
-    
+    // setup the board
     panel = new JPanel(new GridLayout(rows, columns));
     panel.setPreferredSize(new Dimension(size * columns, size * rows));
     panel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2, false));
@@ -177,7 +177,7 @@ public class Reversi extends JFrame
     headingLabel[3] = new JLabel(lightClick);
     
     
-    /* construct new game button */
+    /* setup new game button */
     newGame = new JButton("New Game");
     newGame.setBackground(new Color(9, 144, 14));
     newGame.setFont(new Font("Serif", Font.BOLD, 12));
@@ -185,7 +185,7 @@ public class Reversi extends JFrame
     newGame.addMouseListener(handler);
     newGame.addMouseMotionListener(handler);
     
-    /* construct the heading of the gui */
+    /* setup the heading of the gui */
     heading.add(headingLabel[0]);
     heading.add(headingLabel[1]);
     heading.add(newGame);
@@ -197,13 +197,13 @@ public class Reversi extends JFrame
     buttons = new JButton[rows][columns];
     array = new int[rows][columns];
     
+    // setup empty squares on the table and array representation
     for (int i = 0; i < rows; i++)
     {
       for (int j = 0; j < columns; j++)
       {
         array[i][j] = 0;
         buttons[i][j] = new JButton("", grid);
-        Color color = new Color(9, 144, 14);
         buttons[i][j].addMouseListener(handler);
         buttons[i][j].addMouseMotionListener(handler);
         panel.add(buttons[i][j]);
@@ -233,11 +233,13 @@ public class Reversi extends JFrame
     int y1 = columns / 2 - 1;          // the y cooridnate of the first center square            
     int y2 = y1 + 1;                   // the y cooridnate of teh second center square
       
+    // set icon for the first 4 pieces in the center
     buttons[x1][y1].setIcon(darkClick);
     buttons[x1][y2].setIcon(lightClick);
     buttons[x2][y1].setIcon(lightClick);
     buttons[x2][y2].setIcon(darkClick);
       
+    // setup array representation of the 4 pieces in the center
     array[x1][y1] = 1;
     array[x1][y2] = 2;
     array[x2][y1] = 2;
@@ -459,7 +461,7 @@ public class Reversi extends JFrame
     int tempX;         // a temporary value of x coordinate
     int tempY;         // a temporary value of y cooridnate
     
-    // flips the expected number of numFlips
+    // flips the expected number of numFlips by changing icon and number value
     for (int i = 1; i <= numFlips; i++)
     {
      tempX = x + i * deltaX;
@@ -520,8 +522,8 @@ public class Reversi extends JFrame
   {
     int count = 0;         // the number of pieces which color is specified in the variable parameter
     
-    // go through the array and find the number of pieces 
-    for (int i = 0; i < rows; i++)
+    // go through the array and find the number of pieces in each color
+    for (int i = 0; i < rows; i++) 
     {
       for (int j = 0; j < columns; j++)
       {

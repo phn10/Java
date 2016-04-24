@@ -1,10 +1,13 @@
 /**
-  * Name: Phong Nguyen
-  * ID  : phn10
-  */
+ * Name: Phong Nguyen
+ * ID  : phn10
+ */
 
 import java.util.ListIterator;
 
+/**
+ * A class represent a DNA array
+ */
 public class DNA extends DoubleLinkedList<DNA.Base>
 {
   public enum Base
@@ -12,12 +15,20 @@ public class DNA extends DoubleLinkedList<DNA.Base>
     A, C, G, T;
   }
   
+  /**
+   * return the string representation of the DNA array
+   * @return the string representation of the DNA array
+   */
   @Override
   public String toString()
   {
+    /* string builder */
     StringBuilder str = new StringBuilder();
+    /* list iterator of the dna */
     ListIterator list = this.iterator();
     
+    /* iterate through the list and add the char representation of the each element
+     * to the string */
     for (Base b : this)
       str.append((String.valueOf(b)));
     
@@ -25,15 +36,22 @@ public class DNA extends DoubleLinkedList<DNA.Base>
     return string;
   } 
   
+  /**
+   * receive a string and convert that string to DNA array
+   * @parram s input string
+   * @return DNA list representation of the DNA array
+   */
   public static DNA string2DNA(String s)
   {
     DNA dna = new DNA();
    
+    /* create an warning message when the string is empty */
     if (s.length() == 0)
       throw new IllegalArgumentException("The String should not be empty");
 
     try
     {
+      /* iterate through array and add each element of the string to the dna */
       for (char ch : s.toCharArray())
       {
         dna.addToBack(DNA.Base.valueOf(String.valueOf(ch)));  
@@ -42,11 +60,14 @@ public class DNA extends DoubleLinkedList<DNA.Base>
       System.err.println("The String should only contains Base character");
       return null;
     }
-    
+      
     return dna;
   }
 
-  
+  /* splice two dna array into one 
+   * @param dna the second dna
+   * @param numbases the number of merged element 
+   */
   public void splice(DNA dna, int numbases)
   {
     int i = 0;
@@ -62,6 +83,7 @@ public class DNA extends DoubleLinkedList<DNA.Base>
     {
       this.getBack().setNext(node);
       node.setPrevious(this.getBack());
+      this.setBack(dna.getBack());
     }
   }  
   

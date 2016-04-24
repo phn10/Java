@@ -1,6 +1,7 @@
-// Name: Phong Nguyen
-// ID: phn10
-// new comment
+/**
+ * Name: Phong Nguyen
+ * ID  : phn10
+ */
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -103,7 +104,7 @@ public class DoubleLinkedList<T> implements Iterable<T> {
       this.setBack(newNode);
     }
   }
-
+  
   /**
    * Remove and return the element at the front of the linked list.
    * @return the element that was at the front of the linked list
@@ -139,28 +140,42 @@ public class DoubleLinkedList<T> implements Iterable<T> {
       
       if (this.getBack() == null)
         this.setFront(null);
-
+      
       return element;
     }
   }
   
   
   /**
-   * equals method
+   * Compare the two double linked list
+   * @param obj the compared linked list
+   * @return true if two list are equal, false if not
    */
+  @Override
   public boolean equals(Object obj)
-  {
+  { 
+    /* if obj is DoubleLinkedList */
     if (obj instanceof DoubleLinkedList)
     {
-      DoubleLinkedList list2 = (DoubleLinkedList)obj;
+      /* change obj current type to DoubleLinkedList */
+      DoubleLinkedList list2 = (DoubleLinkedList)obj; 
+      
+      /* if either list is empty, return false */
+      if (this.isEmpty() || list2.isEmpty())
+        return false;
+      
       Iterator it1 = this.iterator();
       Iterator it2 = list2.iterator();
       
+      /* iterate through list1 and list2 
+       * and compare the element at the same position of two list */
       while(it1.hasNext() && it2.hasNext())
       {
         if (it1.next() != it2.next())
           return false;
       }
+      
+      /* if one of the list have element, return false */
       if (it1.hasNext() || it2.hasNext())
         return false;
       else
@@ -171,16 +186,19 @@ public class DoubleLinkedList<T> implements Iterable<T> {
   }
   
   /**
-   * append a new double link list to this list
+   * append the second list to the first list which calls this method
+   * @param list the second list
    */
   public void append(DoubleLinkedList<T> list)
   {
     this.getBack().setNext(list.getFront());
     list.getFront().setPrevious(this.getBack());
+    this.setBack(list.getBack());
   }
-
+  
   /**
-   * get length
+   * get number of nodes in this list
+   * @return the number of nodes in this list
    */
   public int length()
   {
@@ -203,53 +221,95 @@ public class DoubleLinkedList<T> implements Iterable<T> {
   public ListIterator<T> iterator() {
     return new ListIterator<T>() {
       
-      // create a next pointer
+      /* create a new node point to the first node of this list */
       private DLNode<T> nodePtr = DoubleLinkedList.this.getFront();
-      private DLNode<T> prevPtr;
+      
+      /* user can only call set() and remove() when setAvailable is true */
       private boolean setAvailable = false;
       
+      /* isBack determines if the nodePtr points to the end of the list */
+      private boolean isBack = false;
+      
+      /**
+       * determine the possibility of moving next  
+       * @return true if can move next, false if not
+       */
       @Override
       public boolean hasNext()
       {
-        return nodePtr != null;
+        return !isBack;
       }
       
+      /**
+       * return the element of the next node
+       * @return the element of the next node
+       */
       @Override
       public T next() 
       {
         if (!this.hasNext())
           throw new NoSuchElementException();
         
-        // return the current element and move to the next node
-        setAvailable = true;
-        T element = nodePtr.getElement();
-        nodePtr = nodePtr.getNext();
+        /* if the node pointer points to the back node */
+        if (nodePtr == DoubleLinkedList.this.getBack())
+          isBack = true;
         
-        // setup prevPtr after call next()
-        nodePtr.getPrevious().setPrevious(prevPtr);
-        prePtr(
+        setAvailable = true;
+        
+        // return the element of nodePtr and move nodePtr to the next node
+        T element = nodePtr.getElement();
+        
+        if (!isBack)
+          nodePtr = nodePtr.getNext();
+        
         return element;
       }
       
+      /**
+       * determine the possibility of moving backward  
+       * @return true if can move back, false if not
+       */
       @Override
       public boolean hasPrevious()
       {
-        if (prevPtr != null)
-          return true;
-        else
+        if (nodePtr.getPrevious() == null || nodePtr.getPrevious().getPrevious() == null)
           return false;
+        else
+          return true;
       }
-          
+      
+      /**
+       * return the element of the previous node
+       * @return the element of the previous node
+       */
       @Override
       public T previous()
       {
+        if (!this.hasPrevious())
+          throw new NoSuchElementException();
+        
         setAvailable = true;
-        T element = prevPtr.getElement();
-        prevPtr = prevPtr.getPrevious();
-        nodePtr = nodePtr.getPrevious();
+        
+        // return the element of the previous two node of nodePtr and move nodePtr to previous node
+        
+        T element;
+        if (isBack)
+          element = nodePtr.getPrevious().getElement();
+        else
+        {
+          element = nodePtr.getPrevious().getPrevious().getElement();
+          nodePtr = nodePtr.getPrevious();
+        }
+        /* the nodePtr doesn't point to the last node anymore */
+        isBack = false;
+
         return element;
       }
       
+      /**
+       * add one new element to the list, the node contains this element must follow the API rules
+       * @param element the element user want to add
+       */
       @Override
       public void add(T element)
       {
@@ -266,14 +326,13 @@ public class DoubleLinkedList<T> implements Iterable<T> {
         // case 3: add to the middle
         else
         {
-          node = new DLNode<T>(element, nodePtr.getPrevious().getPrevious(), nodePtr);
-          nodePtr.setPrevious(node);
-          nodePtr.getPrevious().getPrevious().setNext(node);
+          node = new DLNode<T>(element, nodePtr.getPrevious(), nodePtr);
         }
       }
-        
-      /*
-       * replace the element returned by next() or previous() by new element
+      
+      /**
+       * replace the element of the current node (the node immediately before nodePtr) by new element
+       * @param element the element user want to set
        */
       @Override
       public void set(T element)
@@ -282,7 +341,10 @@ public class DoubleLinkedList<T> implements Iterable<T> {
           throw new IllegalStateException();
         else
         {
-          nodePtr.getPrevious().setElement(element);
+          if (nodePtr.getNext() == null)
+            nodePtr.setElement(element);
+          else
+            nodePtr.getPrevious().setElement(element);
         }
       }
       
@@ -291,32 +353,42 @@ public class DoubleLinkedList<T> implements Iterable<T> {
       {
         throw new UnsupportedOperationException();
       }
-        
+      
       @Override
       public int previousIndex()
       { 
         throw new UnsupportedOperationException();
       }
       
+      /**
+       * remove the node immediately before the nodePtr
+       */
       @Override
       public void remove()
       {
         setAvailable = false;
+        
         /* if calling remove() before next() */
         if (nodePtr == DoubleLinkedList.this.getFront())
         {
           throw new IllegalStateException();
         }
         
-        /* removing the first element */
+        /* we have to divide into 3 cases:
+         * case 1: remove the first element
+         * case 2: remove the last eleemnt
+         * case 3: remove the middle element
+         */
+        
+        /* case 1: remove the first element */
         if (nodePtr == DoubleLinkedList.this.getFront().getNext())
         {
           DoubleLinkedList.this.setFront(DoubleLinkedList.this.getFront().getNext());
           DoubleLinkedList.this.getFront().setPrevious(null);
         }
         
-        /* removing the last element */
-        else if (nodePtr == DoubleLinkedList.this.getBack().getNext())
+        /* case 2: remove the last element */
+        else if (nodePtr == DoubleLinkedList.this.getBack())
         {
           DoubleLinkedList.this.setBack(DoubleLinkedList.this.getBack().getPrevious());
           DoubleLinkedList.this.getBack().setNext(null);

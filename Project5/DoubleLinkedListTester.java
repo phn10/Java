@@ -1,10 +1,16 @@
+/**
+ * Name: Phong Nguyen
+ * ID  : phn10
+ */
+
 import org.junit.*;
 import static org.junit.Assert.*;
 import java.util.Iterator;
 import java.util.ListIterator;
 
 /**
- * A class that tests the methods of the DoubleLinkedList class.
+ * A class that tests the methods of the DoubleLinkedList class
+ * @author Phong Nguyen
  */
 public class DoubleLinkedListTester {
   
@@ -160,12 +166,12 @@ public class DoubleLinkedListTester {
     assertEquals("Iterator failed to remove middle element", new Integer(2), head.getElement());
     assertEquals("Iterator failed to remove middle element", new Integer(4), head.getNext().getElement());
     assertEquals("Iterator failed to remove middle element", new Integer(5), head.getNext().getNext().getElement());
-    assertEquals("Iterator failed to remove middle element", null, head.getNext().getNext().getNext());
+    assertEquals("Iterator failed to remove middle element", tail.getNext(), head.getNext().getNext().getNext());
     
     assertEquals("Iterator failed to remove middle element", new Integer(5), tail.getElement());
     assertEquals("Iterator failed to remove middle element", new Integer(4), tail.getPrevious().getElement());
     assertEquals("Iterator failed to remove middle element", new Integer(2), tail.getPrevious().getPrevious().getElement());
-    assertEquals("Iterator failed to remove middle element", null, tail.getPrevious().getPrevious().getPrevious());
+    assertEquals("Iterator failed to remove middle element", head.getPrevious(), tail.getPrevious().getPrevious().getPrevious());
     
     /* testing removing the last element */
     while (listIterator.hasNext())
@@ -197,28 +203,32 @@ public class DoubleLinkedListTester {
     }
   }
   
-  /* test equals method */
+  /*------------------------------------------*/
+  /* THIS IS THE PART I WORTE FOR THE TESTING */
+  /*------------------------------------------*/
+  
+  /* test equals() method of DoubleLinkedList*/
   @Test
   public void testEquals()
   {
     DoubleLinkedList<Integer> list1 = new DoubleLinkedList<Integer>();
     DoubleLinkedList<Integer> list2 = new DoubleLinkedList<Integer>();
-    assertEquals("Test zero: there is no element in both list", list1.equals(list2), true);
+    assertEquals("Test zero: there is no element in both list", list1.equals(list2), false);
     
     list1.addToFront(1);
     list2.addToFront(1);
-    assertEquals("Test one: there is no element in both list", list1.equals(list2), true);
+    assertEquals("Test one: there is one element in both list", list1.equals(list2), true);
     
     list1.addToFront(2);
     list2.addToFront(2);
-    assertEquals("Test many: there is no element in both list", list1.equals(list2), true);
+    assertEquals("Test many: there is two element in both list", list1.equals(list2), true);
     
     list1.addToFront(4);
     list2.addToFront(3);
-    assertEquals("Test many: there is no element in both list", list1.equals(list2), false);
+    assertEquals("Test many: there is three element in both list", list1.equals(list2), false);
   }
   
-  /* test append method */
+  /* test append() method of DoubleLinkedList */
   @Test
   public void testAppend()
   {
@@ -232,10 +242,10 @@ public class DoubleLinkedListTester {
     list3.addToFront(1);    // add 1 and 2 to list3
     list3.addToBack(2);
     
-    assertEquals("Test many: there is more than one element in the list", list1.equals(list3), true);
+    assertEquals("Test many: there are more than one element in the list", list1.equals(list3), true);
   }
   
-  /* test length */
+  /* test length() method of DoubleLinkedList */
   @Test
   public void testLength()
   {
@@ -250,20 +260,18 @@ public class DoubleLinkedListTester {
     assertEquals("Test many: there are many element in each list", list.length(), 3);
   }
   
-  /* test iterator */
+  /* test two new features of the listIterator 
+   * including: previous(), hasPrevious()*/
   @Test
-  public void testIterator()
+  public void testNextandPrevious()
   {
     DoubleLinkedList<Integer> list = new DoubleLinkedList<Integer>();
-    list.addToFront(1);
-    list.addToBack(2);
-    list.addToBack(3);
-    list.addToBack(4);
-    list.addToBack(5);
+    for (int i = 5; i > 0; i--)
+      list.addToFront(i);
     
     ListIterator<Integer> it = list.iterator();
     
-    /* test next and hasnext method */
+    /* test next() and hasNext() method */
     assertEquals("Test first element", it.hasNext(), true);
     assertEquals("Test first element", (int)it.next(), 1);
     assertEquals("Test middle element", it.hasNext(), true);
@@ -273,14 +281,205 @@ public class DoubleLinkedListTester {
     assertEquals("Test middle element", it.hasNext(), true);
     assertEquals("Test middle element", (int)it.next(), 4);
     assertEquals("Test middle element", it.hasNext(), true);
-    assertEquals("Test middle element", (int)it.next(), 5);
+    assertEquals("Test last element", (int)it.next(), 5);
     assertEquals("Test last element", it.hasNext(), false);
     
-    /*test previous and hasPrevious method */
+    /*test previous() and hasPrevious() method */
     assertEquals("Test last element", it.hasPrevious(), true);
-    assertEquals("Test first element", (int)it.previous(), 5);
-    
-    
-    
+    assertEquals("Test last element", (int)it.previous(), 4);
+    assertEquals("Test middle element", it.hasPrevious(), true);
+    assertEquals("Test middle element", (int)it.previous(), 3);
+    assertEquals("Test middle element", it.hasPrevious(), true);
+    assertEquals("Test middle element", (int)it.previous(), 2);
+    assertEquals("Test middle element", it.hasPrevious(), true);
+    assertEquals("Test first element", (int)it.previous(), 1);
+    assertEquals("Test first element", it.hasPrevious(), false);
   }   
+  
+  /* test the set() features of the listIterator */
+   @Test
+   public void testSetListIterator()
+   {
+     DoubleLinkedList<Integer> list = new DoubleLinkedList<Integer>();
+     for (int i = 5; i > 0; i--)
+       list.addToFront(i);
+     
+     ListIterator<Integer> listIterator = list.iterator();
+     
+     /* set the first element */
+     listIterator.next();
+     listIterator.set(6);
+     
+     /* the list now should be 6 2 3 4 5 */
+     int i = 2;
+     assertEquals("The iterator failed when setting the first element", new Integer(6), list.getFront().getElement());
+     assertEquals("The iterator failed when setting the first element", new Integer(i++), listIterator.next());
+     assertEquals("The iterator failed when setting the first element", new Integer(i++), listIterator.next());
+     assertEquals("The iterator failed when setting the first element", new Integer(i++), listIterator.next());
+     assertEquals("The iterator failed when setting the first element", new Integer(i++), listIterator.next());
+     assertEquals("The iterator failed when setting the first element", false , listIterator.hasNext());
+     
+     
+
+     /* testing setting element 3  to 12 */ 
+     listIterator = list.iterator();
+     listIterator.next();
+     listIterator.next();
+     listIterator.next();
+     listIterator.set(12);
+     
+     DLNode<Integer> head = list.getFront();
+     DLNode<Integer> tail = list.getBack();
+     
+     /* the list now should be 6 2 12 4 5 */
+     assertEquals("Iterator failed to set middle element", new Integer(6), head.getElement());
+     assertEquals("Iterator failed to set middle element", new Integer(2), head.getNext().getElement());
+     assertEquals("Iterator failed to set middle element", new Integer(12), head.getNext().getNext().getElement());
+     assertEquals("Iterator failed to set middle element", new Integer(4), head.getNext().getNext().getNext().getElement());
+     assertEquals("Iterator failed to set middle element", new Integer(5), head.getNext().getNext().getNext().getNext().getElement());
+     assertEquals("Iterator failed to set middle element", null, head.getNext().getNext().getNext().getNext().getNext());
+     
+     assertEquals("Iterator failed to set middle element", new Integer(5), tail.getElement());
+     assertEquals("Iterator failed to set middle element", new Integer(4), tail.getPrevious().getElement());
+     assertEquals("Iterator failed to set middle element", new Integer(12), tail.getPrevious().getPrevious().getElement());
+     assertEquals("Iterator failed to set middle element", new Integer(2), tail.getPrevious().getPrevious().getPrevious().getElement());
+     assertEquals("Iterator failed to set middle element", new Integer(6), tail.getPrevious().getPrevious().getPrevious().getPrevious().getElement());
+     assertEquals("Iterator failed to set middle element", null, tail.getPrevious().getPrevious().getPrevious().getPrevious().getPrevious());
+     
+     /* testing setting the last element */ 
+     while (listIterator.hasNext())
+       listIterator.next();
+     listIterator.set(33);
+     
+     head = list.getFront();
+     tail = list.getBack();
+     
+     /* the list now should be 6 2 12 4 33 */
+     assertEquals("Iterator failed to set last element", new Integer(6), head.getElement());
+     assertEquals("Iterator failed to set last element", new Integer(2), head.getNext().getElement());
+     assertEquals("Iterator failed to set last element", new Integer(12), head.getNext().getNext().getElement());
+     assertEquals("Iterator failed to set last element", new Integer(4), head.getNext().getNext().getNext().getElement());
+     assertEquals("Iterator failed to set last element", new Integer(33), head.getNext().getNext().getNext().getNext().getElement());
+     assertEquals("Iterator failed to set last element", null, head.getNext().getNext().getNext().getNext().getNext());
+     
+     assertEquals("Iterator failed to set last element", new Integer(33), tail.getElement());
+     assertEquals("Iterator failed to set last element", new Integer(4), tail.getPrevious().getElement());
+     assertEquals("Iterator failed to set last element", new Integer(12), tail.getPrevious().getPrevious().getElement());
+     assertEquals("Iterator failed to set last element", new Integer(2), tail.getPrevious().getPrevious().getPrevious().getElement());
+     assertEquals("Iterator failed to set last element", new Integer(6), tail.getPrevious().getPrevious().getPrevious().getPrevious().getElement());
+     assertEquals("Iterator failed to set last element", null, tail.getPrevious().getPrevious().getPrevious().getPrevious().getPrevious());
+     
+     /* testing setting before calling next */ 
+     listIterator = list.iterator();
+     try {
+       listIterator.set(33);
+       fail("Calling iterator's set() before calling next() should throw an IllegalStateException");
+     }
+     catch (IllegalStateException e) {
+       // all is good
+     }
+     catch (Exception e) {
+       fail("The wrong exception thrown by the iterator remove() method.");
+     }
+     
+     /* testing setting after calling add() or remove() */
+     listIterator = list.iterator();
+     try {
+       listIterator.next();
+       listIterator.add(10);
+       listIterator.remove(); 
+       listIterator.set(33);
+       fail("Calling iterator's set() after calling neither add() or remove() should throw an IllegalStateException");
+     }
+     catch (IllegalStateException e) {
+       // all is good
+     }
+     catch (Exception e) {
+       fail("The wrong exception thrown by the iterator remove() method.");
+     }
+   }
+   
+   /* test the add() features of the listIterator */
+   @Test
+   public void testAddListIterator()
+   {
+     DoubleLinkedList<Integer> list = new DoubleLinkedList<Integer>();
+     for (int i = 5; i > 0; i--)
+       list.addToFront(i);
+     
+     ListIterator<Integer> listIterator = list.iterator();
+     
+     /* add the first element after calling next()*/
+     listIterator.next();
+     listIterator.add(6);
+     
+     /* the list now should be 6 1 2 3 4 5 */
+     int i = 1;
+     listIterator = list.iterator();
+     assertEquals("The iterator failed when adding the first element", new Integer(6), listIterator.next());
+     assertEquals("The iterator failed when adding the first element", new Integer(i++), listIterator.next());
+     assertEquals("The iterator failed when adding the first element", new Integer(i++), listIterator.next());
+     assertEquals("The iterator failed when adding the first element", new Integer(i++), listIterator.next());
+     assertEquals("The iterator failed when adding the first element", new Integer(i++), listIterator.next());
+     assertEquals("The iterator failed when adding the first element", new Integer(i++), listIterator.next());
+     assertEquals("The iterator failed when adding the first element", false , listIterator.hasNext());
+     
+     /* testing adding 12 after third element */
+     listIterator = list.iterator();
+     listIterator.next();
+     listIterator.next();
+     listIterator.next();
+     listIterator.add(12);
+     
+     DLNode<Integer> head = list.getFront();
+     DLNode<Integer> tail = list.getBack();
+     
+     /* the list now should be 6 1 2 12 3 4 5 */
+     assertEquals("Iterator failed to add middle element", new Integer(6), head.getElement());
+     assertEquals("Iterator failed to add middle element", new Integer(1), head.getNext().getElement());
+     assertEquals("Iterator failed to add middle element", new Integer(2), head.getNext().getNext().getElement());
+     assertEquals("Iterator failed to add middle element", new Integer(12), head.getNext().getNext().getNext().getElement());
+     assertEquals("Iterator failed to add middle element", new Integer(3), head.getNext().getNext().getNext().getNext().getElement());
+     assertEquals("Iterator failed to add middle element", new Integer(4), head.getNext().getNext().getNext().getNext().getNext().getElement());
+     assertEquals("Iterator failed to add middle element", new Integer(5), head.getNext().getNext().getNext().getNext().getNext().getNext().getElement());
+     assertEquals("Iterator failed to add middle element", null, head.getNext().getNext().getNext().getNext().getNext().getNext().getNext());
+     
+     assertEquals("Iterator failed to add middle element", new Integer(5), tail.getElement());
+     assertEquals("Iterator failed to add middle element", new Integer(4), tail.getPrevious().getElement());
+     assertEquals("Iterator failed to add middle element", new Integer(3), tail.getPrevious().getPrevious().getElement());
+     assertEquals("Iterator failed to add middle element", new Integer(12), tail.getPrevious().getPrevious().getPrevious().getElement());
+     assertEquals("Iterator failed to add middle element", new Integer(2), tail.getPrevious().getPrevious().getPrevious().getPrevious().getElement());
+     assertEquals("Iterator failed to add middle element", new Integer(1), tail.getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getElement());
+     assertEquals("Iterator failed to add middle element", new Integer(6), tail.getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getElement());
+     assertEquals("Iterator failed to add middle element", null, tail.getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious());
+     
+     /* testing removing the last element */
+     while (listIterator.hasNext())
+       listIterator.next();
+     listIterator.add(21);
+     
+     head = list.getFront();
+     tail = list.getBack();
+     
+     /* the list now should be 6 1 2 12 3 4 5 21 */  
+     assertEquals("Iterator failed to add last element", new Integer(6), head.getElement());
+     assertEquals("Iterator failed to add lsat element", new Integer(1), head.getNext().getElement());
+     assertEquals("Iterator failed to add last element", new Integer(2), head.getNext().getNext().getElement());
+     assertEquals("Iterator failed to add last element", new Integer(12), head.getNext().getNext().getNext().getElement());
+     assertEquals("Iterator failed to add last element", new Integer(3), head.getNext().getNext().getNext().getNext().getElement());
+     assertEquals("Iterator failed to add last element", new Integer(4), head.getNext().getNext().getNext().getNext().getNext().getElement());
+     assertEquals("Iterator failed to add last element", new Integer(5), head.getNext().getNext().getNext().getNext().getNext().getNext().getElement());
+     assertEquals("Iterator failed to add last element", new Integer(21), head.getNext().getNext().getNext().getNext().getNext().getNext().getNext().getElement());
+     assertEquals("Iterator failed to add last element", null, head.getNext().getNext().getNext().getNext().getNext().getNext().getNext().getNext());
+
+     assertEquals("Iterator failed to add last element", new Integer(21), tail.getElement());
+     assertEquals("Iterator failed to add last element", new Integer(5), tail.getPrevious().getElement());
+     assertEquals("Iterator failed to add last element", new Integer(4), tail.getPrevious().getPrevious().getElement());
+     assertEquals("Iterator failed to add last element", new Integer(3), tail.getPrevious().getPrevious().getPrevious().getElement());
+     assertEquals("Iterator failed to add last element", new Integer(12), tail.getPrevious().getPrevious().getPrevious().getPrevious().getElement());
+     assertEquals("Iterator failed to add last element", new Integer(2), tail.getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getElement());
+     assertEquals("Iterator failed to add last element", new Integer(1), tail.getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getElement());
+     assertEquals("Iterator failed to add last element", new Integer(6), tail.getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getElement());
+     assertEquals("Iterator failed to add last element", null, tail.getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious());  
+   }
 }

@@ -1,3 +1,8 @@
+/**
+  * Name: Phong Nguyen
+  * ID  : phn10
+  */
+
 import java.util.ListIterator;
 
 public class DNA extends DoubleLinkedList<DNA.Base>

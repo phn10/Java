@@ -10,6 +10,7 @@ import java.util.ListIterator;
  */
 public class DNA extends DoubleLinkedList<DNA.Base>
 {
+  /* include all the base of dna array */
   public enum Base
   {
     A, C, G, T;

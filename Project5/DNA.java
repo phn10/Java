@@ -145,12 +145,12 @@ public class DNA extends DoubleLinkedList<DNA.Base>
       
       if (sliced12 > sliced21)
       {
-        d1.splice(d2, sliced12 - 1);
+        d1.splice(d2, sliced12);
         System.out.println(d1);
       }
       else
       {
-        d2.splice(d1, sliced21 - 1);
+        d2.splice(d1, sliced21);
         System.out.println(d2);
       }
     } catch (Exception e) {}

@@ -7,6 +7,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import java.util.Iterator;
 import java.util.ListIterator;
+import java.io.*;
 
 /**
  * A class that tests the methods of the DNA class
@@ -155,6 +156,52 @@ public class DNATester
     assertEquals("Test first: test overlaps failed when the cursor points to the first element", DNA.overlaps(dna1, dna2, 5), true);
   }
    
-  
+  /**
+   * test main method in DNA class
+   */
+  @Test
+  public void testMain()
+  {
+    DNA dna1 = new DNA();
+    DNA dna2 = new DNA();
+    
+    
+    /* test first
+     * only the first element in the second dna strand overlaps the first dna strand 
+     * two strands: AGGTCT and TAAAAC, the overlaps part is T
+     * expcect the main method printout AGGTCTAAAC
+     */
+    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outContent));
+    DNA.main(new String[] {"AGGTCT", "TAAAAC"});
 
+    assertEquals("Test first: the main method failed to splice when only first element overlaps", outContent.toString(), "AGGTCTAAAAC" + "\n");
+    System.setOut(null);      // clear setOut
+    
+    
+    /* test middle
+     * the second dna overlaps half of the first dna strand
+     * two strands: CGCTCACCTAT and ATAATCGCTC, the overlap part is AT and CGCTC,
+     * but since CGCT is bigger than AT, expcect the main method printout AGGTCTAAAC
+     */
+     outContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outContent));
+    DNA.main(new String[] {"CGCTCACCTAT", "ATAATCGCTC"});
+
+    assertEquals("Test middle: the main method failed to splice at middle element", outContent.toString(), "ATAATCGCTCACCTAT" + "\n");
+    System.setOut(null);
+    
+    
+    /* test last
+     * the first dna overlaps all of the second dna strand
+     * two strands: AAAAAT and AAAA, the overlap part is AAAA
+     * expcect the main method printout AAAAAT
+     */
+     outContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outContent));
+    DNA.main(new String[] {"AAAAAT", "AAAA"});
+
+    assertEquals("Test last: the main method failed to splice to splice at last element", outContent.toString(), "AAAAAT" + "\n");
+    System.setOut(null);
+  }
 }

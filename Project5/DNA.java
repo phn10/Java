@@ -58,7 +58,7 @@ public class DNA extends DoubleLinkedList<DNA.Base>
         dna.addToBack(DNA.Base.valueOf(String.valueOf(ch)));  
       }
     } catch (IllegalArgumentException e) {
-      System.err.println("The String should only contains Base character");
+      System.err.println("Error: The DNA arrays should only contain Base character");
       return null;
     }
       
@@ -153,7 +153,6 @@ public class DNA extends DoubleLinkedList<DNA.Base>
         d2.splice(d1, sliced21 - 1);
         System.out.println(d2);
       }
-    } catch (Exception e) 
-    { System.out.println("Error: The two DNA strands should only contains DNA Base"); }
+    } catch (Exception e) {}
   }
 }   

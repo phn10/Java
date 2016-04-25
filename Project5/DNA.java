@@ -143,32 +143,38 @@ public class DNA extends DoubleLinkedList<DNA.Base>
     {
       DNA d1 = new DNA();
       DNA d2 = new DNA();
-      int sliced12 = 0;
-      int sliced21 = 0;
+      int spliced12 = 0;
+      int spliced21 = 0;
       
       d1 = DNA.string2DNA(args[0]);
       d2 = DNA.string2DNA(args[1]);
       
       int index = 1;
       
+      /* traverse through two dna and find the maximum number of overlap bases in two case
+       * the second dna is appended to the first dna
+       * the first dna is appended to the second dna
+       */
       while (index <= d1.length() && index <= d2.length())
       {
         if (overlaps(d1, d2, index))
-          sliced12 =  index;
+          spliced12 =  index;
         
         if (overlaps(d2, d1, index))
-          sliced21 = index;
+          spliced21 = index;
         index++;
       }
       
-      if (sliced12 > sliced21)
+      /* splice the second onto the first */
+      if (spliced12 > spliced21)
       {
-        d1.splice(d2, sliced12);
+        d1.splice(d2, spliced12);
         System.out.println(d1);
       }
+      /* splice the fisrt onto the second */
       else
       {
-        d2.splice(d1, sliced21);
+        d2.splice(d1, spliced21);
         System.out.println(d2);
       }
     } catch (Exception e) {}

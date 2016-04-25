@@ -294,6 +294,19 @@ public class DoubleLinkedListTester {
     assertEquals("Test middle element", it.hasPrevious(), true);
     assertEquals("Test first element", (int)it.previous(), 1);
     assertEquals("Test first element", it.hasPrevious(), false);
+    
+    /* special condition: when the list has only two element */
+    list = new DoubleLinkedList<Integer>();
+    list.addToFront(1);
+    list.addToBack(2);
+    it = list.iterator();
+    
+    assertEquals("Special condition: test first", new Integer(1), it.next());
+    assertEquals("Special condition: test last", new Integer(2), it.next());
+    assertEquals("Special condition: test last", false, it.hasNext());
+    
+    assertEquals("Special condition: test first", new Integer(1), it.previous());
+    assertEquals("Special condition: test first", false, it.hasPrevious());
   }   
   
   /* test the set() features of the listIterator */

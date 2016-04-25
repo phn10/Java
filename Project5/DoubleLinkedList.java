@@ -272,6 +272,8 @@ public class DoubleLinkedList<T> implements Iterable<T> {
       @Override
       public boolean hasPrevious()
       {
+        if (isBack && nodePtr.getPrevious() != null)
+          return true;
         if (nodePtr.getPrevious() == null || nodePtr.getPrevious().getPrevious() == null)
           return false;
         else
@@ -302,7 +304,7 @@ public class DoubleLinkedList<T> implements Iterable<T> {
         }
         /* the nodePtr doesn't point to the last node anymore */
         isBack = false;
-
+        
         return element;
       }
       

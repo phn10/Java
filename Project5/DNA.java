@@ -74,12 +74,14 @@ public class DNA extends DoubleLinkedList<DNA.Base>
     int i = 0;
     DLNode<DNA.Base> node = dna.getFront();
     
+    /* traverse through the dna array until either passed numbases nodes or the current node is null */
     while (i < numbases && node != null)
     {
       i++;
       node = node.getNext();
     }
     
+    /* if the node is not null, append the current node to the last of this node */
     if (node != null)
     {
       this.getBack().setNext(node);
@@ -88,18 +90,31 @@ public class DNA extends DoubleLinkedList<DNA.Base>
     }
   }  
   
+  /**
+   * find the overlaps part between the first dna and the second dna
+   * @param dna1 the first dna
+   * @param dna2 the second dna
+   * @param n the number of match base
+   * @return true if two base overlap, false if not
+   */
   public static boolean overlaps(DNA dna1, DNA dna2, int n)
   {
     DLNode node1 = dna1.getBack();
     DLNode node2 = dna2.getFront();
    
+    /* return false if the number of base is greater than either dnas length */
     if (n > dna1.length() || n > dna2.length() || n == 0)
       return false;
     
+    /* get the nth node from the back of the first dna */
     for (int i = 0; i < n - 1; i++)
       node1 = node1.getPrevious();
     
     int j = 0;
+    
+    /* traverse through the back of first dna and the head of second dna 
+     * and compare the element in each corresponding position in each dna
+     */
     while (j < n - 1 && node1.getElement() == node2.getElement())
     {
       j++;
@@ -107,17 +122,20 @@ public class DNA extends DoubleLinkedList<DNA.Base>
       node2 = node2.getNext();
     }
     
+    /* return false if the while loop cannot finish n - 1 steps, which means they are not overlaps */
     if (node1 != null && node2 != null && node1.getElement() != node2.getElement())
       return false;
-   
+    
+   /* else return true */
     return true;
   }
   
   public static void main(String args[])
   {
+    /* print out error if the user enter more or less than two string */
     if (args.length != 2)
     {
-      System.out.println("Error: You should enter two string");
+      System.out.println("Error: You should enter two strings");
       return;
     }
     

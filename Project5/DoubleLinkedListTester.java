@@ -203,9 +203,9 @@ public class DoubleLinkedListTester {
     }
   }
   
-  /*------------------------------------------*/
-  /* THIS IS THE PART I WORTE FOR THE TESTING */
-  /*------------------------------------------*/
+  /*------------------------------------------------------*/
+  /* THIS IS THE PART I WORTE FOR THE TESTING THE PROJECT */
+  /*------------------------------------------------------*/
   
   /* test equals() method of DoubleLinkedList*/
   @Test
@@ -221,11 +221,64 @@ public class DoubleLinkedListTester {
     
     list1.addToFront(2);
     list2.addToFront(2);
-    assertEquals("Test many: there is two element in both list", list1.equals(list2), true);
+    assertEquals("Test many: there are two element in both list", list1.equals(list2), true);
     
     list1.addToFront(4);
-    list2.addToFront(3);
-    assertEquals("Test many: there is three element in both list", list1.equals(list2), false);
+    list2.addToFront(4);
+    assertEquals("Test many: there are three element in both list", list1.equals(list2), true);
+    
+    list1 = new DoubleLinkedList<Integer>();
+    list2 = new DoubleLinkedList<Integer>();
+    
+    list1.addToFront(1);
+    list1.addToBack(2);
+    list1.addToBack(3);
+    list1.addToBack(4);
+    
+    list2.addToFront(5);
+    list2.addToBack(2);
+    list2.addToBack(3);
+    list2.addToBack(4);
+    
+    /* test first: the first elements in two list are different */
+    /* 1234 and 5234 */
+    assertEquals("Test first: the first elements in two list are different", list1.equals(list2), false);
+    
+    
+    list1 = new DoubleLinkedList<Integer>();
+    list2 = new DoubleLinkedList<Integer>();
+    
+    list1.addToFront(1);
+    list1.addToBack(2);
+    list1.addToBack(3);
+    list1.addToBack(4);
+    
+    list2.addToFront(1);
+    list2.addToBack(2);
+    list2.addToBack(5);
+    list2.addToBack(4);
+    
+    /* the last elements in two list are different */
+    /* 1234 and 1254 */
+    assertEquals("Test middle: the middle elements in two list are different", list1.equals(list2), false);
+    
+    
+    list1 = new DoubleLinkedList<Integer>();
+    list2 = new DoubleLinkedList<Integer>();
+    
+    list1.addToFront(1);
+    list1.addToBack(2);
+    list1.addToBack(3);
+    list1.addToBack(4);
+    
+    list2.addToFront(1);
+    list2.addToBack(2);
+    list2.addToBack(5);
+    list2.addToBack(4);
+    
+    /* the last elements in two list are different */
+    /* 1234 and 1235 */
+    assertEquals("Test last: the last elements in two list are different", list1.equals(list2), false);
   }
   
   /* test append() method of DoubleLinkedList */
@@ -263,7 +316,7 @@ public class DoubleLinkedListTester {
   /* test two new features of the listIterator 
    * including: previous(), hasPrevious()*/
   @Test
-  public void testNextandPrevious()
+  public void testNextandPreviousIterator()
   {
     DoubleLinkedList<Integer> list = new DoubleLinkedList<Integer>();
     for (int i = 5; i > 0; i--)

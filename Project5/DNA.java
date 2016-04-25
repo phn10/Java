@@ -93,7 +93,7 @@ public class DNA extends DoubleLinkedList<DNA.Base>
     DLNode node1 = dna1.getBack();
     DLNode node2 = dna2.getFront();
    
-    if (n > dna1.length() || n > dna2.length())
+    if (n > dna1.length() || n > dna2.length() || n == 0)
       return false;
     
     for (int i = 0; i < n - 1; i++)
@@ -117,41 +117,43 @@ public class DNA extends DoubleLinkedList<DNA.Base>
   {
     if (args.length != 2)
     {
-      System.out.println("Should have two string");
+      System.out.println("Error: You should enter two string");
       return;
     }
     
-    DNA d1 = new DNA();
-    DNA d2 = new DNA();
-    int sliced12 = 0;
-    int sliced21 = 0;
-    
-    d1 = DNA.string2DNA(args[0]);
-    d2 = DNA.string2DNA(args[1]);
-    
-    int index = 1;
-    
-    while (index <= d1.length() && index <= d2.length())
+    try 
     {
-      if (overlaps(d1, d2, index))
-        sliced12 =  index;
+      DNA d1 = new DNA();
+      DNA d2 = new DNA();
+      int sliced12 = 0;
+      int sliced21 = 0;
       
-      if (overlaps(d2, d1, index))
-        sliced21 = index;
-      index++;
-    }
-    
-    if (sliced12 > sliced21)
-    {
-      System.out.println(sliced12);
-      d1.splice(d2, sliced12 - 1);
-      System.out.println(d1);
-    }
-    else
-    {
-       System.out.println(sliced21);
-      d2.splice(d1, sliced21 - 1);
-      System.out.println(d2);
-    }
+      d1 = DNA.string2DNA(args[0]);
+      d2 = DNA.string2DNA(args[1]);
+      
+      int index = 1;
+      
+      while (index <= d1.length() && index <= d2.length())
+      {
+        if (overlaps(d1, d2, index))
+          sliced12 =  index;
+        
+        if (overlaps(d2, d1, index))
+          sliced21 = index;
+        index++;
+      }
+      
+      if (sliced12 > sliced21)
+      {
+        d1.splice(d2, sliced12 - 1);
+        System.out.println(d1);
+      }
+      else
+      {
+        d2.splice(d1, sliced21 - 1);
+        System.out.println(d2);
+      }
+    } catch (Exception e) 
+    { System.out.println("Error: The two DNA strands should only contains DNA Base"); }
   }
 }   

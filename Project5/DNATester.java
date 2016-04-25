@@ -127,8 +127,34 @@ public class DNATester
      * cut out last element from the second dna
      * the first dna should be A
      */
-    assertEquals("Test last: test splice failed to splice last element from the second dna strand", dna1, DNA.string2DNA("A"));
-    
-    
+    assertEquals("Test last: test splice failed to splice last element from the second dna strand", dna1, DNA.string2DNA("A"));    
   }
+  
+  /**
+   * test the overlaps method in DNA class
+   */
+  @Test
+  public void testOverLaps()
+  {
+    DNA dna1 = new DNA();
+    DNA dna2 = new DNA();
+    
+    dna1 = DNA.string2DNA("AAAAA");
+    dna2 = DNA.string2DNA("AAAAA");
+    
+    /* test zero */
+    assertEquals("Test zero", DNA.overlaps(dna1, dna2, 0), false);
+    
+    /*test first */
+    assertEquals("Test first: test overlaps failed when the cursor points to the first element", DNA.overlaps(dna1, dna2, 1), true);
+    
+    /*test middle */
+    assertEquals("Test middle: test overlaps failed when the cursor points to the middle element", DNA.overlaps(dna1, dna2, 3), true);
+    
+    /*test last */
+    assertEquals("Test first: test overlaps failed when the cursor points to the first element", DNA.overlaps(dna1, dna2, 5), true);
+  }
+   
+  
+
 }

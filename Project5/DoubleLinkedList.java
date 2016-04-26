@@ -188,12 +188,17 @@ public class DoubleLinkedList<T> implements Iterable<T> {
   /**
    * append the second list to the first list which calls this method
    * @param list the second list
+   * @exception NoSuchElementException when either list is empty
    */
   public void append(DoubleLinkedList<T> list)
   {
-    this.getBack().setNext(list.getFront());
-    list.getFront().setPrevious(this.getBack());
-    this.setBack(list.getBack());
+    try
+    {
+      this.getBack().setNext(list.getFront());
+      list.getFront().setPrevious(this.getBack());
+      this.setBack(list.getBack());
+    } catch (NoSuchElementException e)
+    { System.out.println("Either list should not be empty"); }
   }
   
   /**
@@ -243,6 +248,7 @@ public class DoubleLinkedList<T> implements Iterable<T> {
       /**
        * return the element of the next node
        * @return the element of the next node
+       * @exception NoSuchElementException if the pointer point to the end of the list
        */
       @Override
       public T next() 
@@ -283,6 +289,7 @@ public class DoubleLinkedList<T> implements Iterable<T> {
       /**
        * return the element of the previous node
        * @return the element of the previous node
+       * @exception NoSuchElementException if the pointer points to the front of the list
        */
       @Override
       public T previous()
@@ -364,6 +371,7 @@ public class DoubleLinkedList<T> implements Iterable<T> {
       
       /**
        * remove the node immediately before the nodePtr
+       * @exception IllegalStateException if calling remove() before calling next()
        */
       @Override
       public void remove()

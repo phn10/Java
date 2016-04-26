@@ -165,8 +165,13 @@ public class DNA extends DoubleLinkedList<DNA.Base>
         index++;
       }
       
+      /* there is no overlap */
+      if (spliced12 == 0 && spliced21 == 0)
+      {
+        System.out.println("");
+      }
       /* splice the second onto the first */
-      if (spliced12 > spliced21)
+      else if (spliced12 > spliced21)
       {
         d1.splice(d2, spliced12);
         System.out.println(d1);

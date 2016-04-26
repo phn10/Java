@@ -213,19 +213,30 @@ public class DoubleLinkedListTester {
   {
     DoubleLinkedList<Integer> list1 = new DoubleLinkedList<Integer>();
     DoubleLinkedList<Integer> list2 = new DoubleLinkedList<Integer>();
+    String l = new String("this is a string");
+    
     assertEquals("Test zero: there is no element in both list", list1.equals(list2), false);
     
     list1.addToFront(1);
     list2.addToFront(1);
     assertEquals("Test one: there is one element in both list", list1.equals(list2), true);
     
+    /* test conflict types */
+    assertEquals("Test confilct types: DoubleLinkedList cannot be compared to String", list1.equals(l), false);
+    
     list1.addToFront(2);
     list2.addToFront(2);
+    /* test many */
     assertEquals("Test many: there are two element in both list", list1.equals(list2), true);
     
     list1.addToFront(4);
     list2.addToFront(4);
+    /* test many */
     assertEquals("Test many: there are three element in both list", list1.equals(list2), true);
+    
+    list2.addToBack(5);
+    /* test many */
+    assertEquals("Test many: two lists have different length", list1.equals(list2), false);
     
     list1 = new DoubleLinkedList<Integer>();
     list2 = new DoubleLinkedList<Integer>();
@@ -245,7 +256,7 @@ public class DoubleLinkedListTester {
     assertEquals("Test first: the first elements in two list are different", list1.equals(list2), false);
     
     
-    list1 = new DoubleLinkedList<Integer>();
+    list1 = new DoubleLinkedList<Integer>(); 
     list2 = new DoubleLinkedList<Integer>();
     
     list1.addToFront(1);
@@ -435,7 +446,7 @@ public class DoubleLinkedListTester {
      assertEquals("Iterator failed to set last element", new Integer(6), tail.getPrevious().getPrevious().getPrevious().getPrevious().getElement());
      assertEquals("Iterator failed to set last element", null, tail.getPrevious().getPrevious().getPrevious().getPrevious().getPrevious());
      
-     /* testing setting before calling next */ 
+     /* testing setting before calling next() */ 
      listIterator = list.iterator();
      try {
        listIterator.set(33);
